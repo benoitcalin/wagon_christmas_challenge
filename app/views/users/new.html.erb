@@ -1,0 +1,40 @@
+<div class="container">
+  <h1 class="text-center my-4">Le Wagon Bordeaux - Christmas Challenge</h1>
+
+  <div class="d-flex flex-column align-items-center">
+    <h2 class="mb-4">Inscrivez-vous !</h2>
+    <div class="dropdown text-center">
+      <button class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+        Formulaire d'inscription
+      </button>
+      <div class="collapse mt-4 text-center <%= 'show' if @user.errors.any? %> " id="collapseExample">
+        <%= simple_form_for @user do |f| %>
+          <%= f.input :pseudo, label: 'Choisissez un pseudo', placeholder: 'BébèreDu33' %>
+          <%= f.input :batch, label: 'Indiquez votre batch', placeholder: '484' %>
+          <%= f.input :challenger_id, label: 'Indiquez votre Advent ID', placeholder: '1237086', hint: 'Dans Settings à côté de anonymous dans après vous être connecté.' %>
+
+          <%= f.button :submit, class: 'btn btn-primary' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <h2 class='text-center my-4'>Le Classement</h2>
+
+  <div class="row">
+    <div class="col-md-6 col-12">
+      <h3 class='text-center mb-4'>Classement individuel</h3>
+
+      <p>LeGrinch - 100000 pts </p>
+      <p>Michel - 3000 pts </p>
+      <p>Carlito - 3 pts </p>
+    </div>
+    <div class="col-md-6 col-12">
+      <h3 class='text-center mb-4'>Classement par batch</h3>
+
+      <p>Batch-484 - 100000 pts </p>
+      <p>Batch-213 - 3000 pts </p>
+      <p>Batch-246 - 3 pts </p>
+    </div>
+  </div>
+</div>
