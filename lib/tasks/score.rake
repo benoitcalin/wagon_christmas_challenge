@@ -157,6 +157,16 @@ namespace :score do
     # STEP 5: Update ranking tables #
     # ----------------------------- #
 
-    # TODO...
+    IndividualScore.destroy_all
+
+    individual_ranking.each do |individual_score|
+      IndividualScore.create!(individual_score)
+    end
+
+    BatchScore.destroy_all
+
+    batch_ranking.each do |batch_score|
+      BatchScore.create!(batch_score)
+    end
   end
 end
