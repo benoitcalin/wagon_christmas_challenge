@@ -15,7 +15,7 @@
           <%= f.input :pseudo, label: 'Choisissez un pseudo', placeholder: 'BébèreDu33' %>
           <%= f.input :batch,
             collection: Batch.all,
-            label: 'Indiquez votre batch' %>
+            label: 'Choisissez votre batch dans la liste' %>
           <%= f.input :challenger_id, label: 'Indiquez votre Advent ID', placeholder: '1237086', hint: 'Dans Settings à côté de anonymous dans après vous être connecté.' %>
 
           <%= f.button :submit, class: 'btn btn-primary' %>
