@@ -5,4 +5,8 @@ class Batch < ApplicationRecord
   has_many :challenges, through: :batch_results
 
   validates :name, presence: true
+
+  def short_name
+    return self.name.split('-')[1]
+  end
 end
