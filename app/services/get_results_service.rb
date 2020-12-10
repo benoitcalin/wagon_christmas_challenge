@@ -10,26 +10,26 @@ module GetResultsService
       https.use_ssl = true
 
       request = Net::HTTP::Get.new(url)
-      request["Cookie"] = "session=#{ENV["COOKIE_SESSION"]}"
+      request["Cookie"] = "session=#{ENV['COOKIE_SESSION']}"
       response = https.request(request)
 
       @json = JSON.parse(response.body)
 
-      get_results_array()
+      get_results_array
     end
 
     private
 
     def get_results_array
-      create_members_array()
+      create_members_array
       create_results_by_challenge(1)
-      fill_results_by_challenge()
-      get_scores_by_member()
+      fill_results_by_challenge
+      get_scores_by_member
     end
 
     def create_members_array
       @members_array = []
-      @json['members'].each { |key, value| @members_array << value }
+      @json['members'].each { |_key, value| @members_array << value }
     end
 
     def create_results_by_challenge(start_day)
@@ -51,7 +51,7 @@ module GetResultsService
 
     def get_scores_by_member
       scores = {}
-      @results_by_challenge.each do |challenge_nbr, participants|
+      @results_by_challenge.each do |_challenge_nbr, participants|
         p_length = User.count
         participants.sort_by { |participant| participant['value'] }.each_with_index do |part, index|
           if scores[part.keys.first]
