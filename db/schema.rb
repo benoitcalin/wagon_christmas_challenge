@@ -10,21 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_10_220259) do
+ActiveRecord::Schema.define(version: 2020_12_10_222010) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "batch_results", force: :cascade do |t|
-    t.integer "score"
-    t.string "best_end_time"
-    t.bigint "batch_id", null: false
-    t.bigint "challenge_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["batch_id"], name: "index_batch_results_on_batch_id"
-    t.index ["challenge_id"], name: "index_batch_results_on_challenge_id"
-  end
 
   create_table "batch_scores", force: :cascade do |t|
     t.string "batch", null: false
@@ -89,13 +78,6 @@ ActiveRecord::Schema.define(version: 2020_12_10_220259) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "challenges", force: :cascade do |t|
-    t.string "day", null: false
-    t.string "number", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
   create_table "individual_scores", force: :cascade do |t|
     t.string "username", null: false
     t.string "batch", null: false
@@ -129,17 +111,6 @@ ActiveRecord::Schema.define(version: 2020_12_10_220259) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "results", force: :cascade do |t|
-    t.integer "score", default: 0, null: false
-    t.bigint "user_id", null: false
-    t.bigint "challenge_id", null: false
-    t.string "end_time"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["challenge_id"], name: "index_results_on_challenge_id"
-    t.index ["user_id"], name: "index_results_on_user_id"
-  end
-
   create_table "users", force: :cascade do |t|
     t.string "pseudo", default: "", null: false
     t.string "challenger_id", default: "", null: false
@@ -149,9 +120,5 @@ ActiveRecord::Schema.define(version: 2020_12_10_220259) do
     t.index ["batch_id"], name: "index_users_on_batch_id"
   end
 
-  add_foreign_key "batch_results", "batches"
-  add_foreign_key "batch_results", "challenges"
-  add_foreign_key "results", "challenges"
-  add_foreign_key "results", "users"
   add_foreign_key "users", "batches"
 end
