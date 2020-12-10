@@ -100,7 +100,7 @@ namespace :score do
       individual_ranking << user_score
     end
 
-    pp individual_ranking
+    # pp individual_ranking
 
     # --------------------------- #
     # STEP 4: Build batch ranking #
@@ -151,7 +151,7 @@ namespace :score do
       batch_ranking << batch_score
     end
 
-    pp batch_ranking
+    # pp batch_ranking
 
     # ----------------------------- #
     # STEP 5: Update ranking tables #
