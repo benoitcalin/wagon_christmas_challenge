@@ -1,4 +1,13 @@
 class UsersController < ApplicationController
+
+  def self.update_score
+    scores = GetResultsService.call
+    scores.each do |challenger_id, score|
+      user = User.find_by_challenger_id(challenger_id)
+      user.update(score: score) if user
+    end
+  end
+
   def new
     @user = User.new
   end
@@ -9,14 +18,6 @@ class UsersController < ApplicationController
       redirect_to root_path, notice: "Votre participation est bien prise en compte"
     else
       render :new
-    end
-  end
-
-  def update
-    scores = GetResultsService.call
-    scores.each do |challenger_id, score|
-        user = User.find_by_challenger_id(challenger_id)
-        user.update(score: score) if user
     end
   end
 
