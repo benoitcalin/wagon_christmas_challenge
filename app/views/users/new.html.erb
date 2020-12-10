@@ -1,7 +1,7 @@
 <div class="container">
   <div class="text-center mt-5">
-    <%= image_tag "logo.png", class:"my-5" %>
     <h1 class="text-primary my-4">LE WAGON - BICODE</h1>
+    <%= image_tag "logo.png", class:"my-5", width: '200px' %>
   </div>
 
   <div class="d-flex flex-column align-items-center">
@@ -14,7 +14,7 @@
         <%= simple_form_for @user do |f| %>
           <%= f.input :pseudo, label: 'Choisissez un pseudo', placeholder: 'BébèreDu33' %>
           <%= f.input :batch,
-            collection: ['Batch-16', 'Batch-19', 'Batch-31', 'Batch-40', 'Batch-51', 'Batch-67', 'Batch-85', 'Batch-102', 'Batch-127', 'Batch-140', 'Batch-166', 'Batch-191', 'Batch-213', 'Batch-246', 'Batch-276', 'Batch-325', 'Batch-343', 'Batch-411', 'Batch-435', 'Batch-478', 'Batch-484', 'Batch-516', 'Batch-pirate'],
+            collection: Batch.all,
             label: 'Indiquez votre batch' %>
           <%= f.input :challenger_id, label: 'Indiquez votre Advent ID', placeholder: '1237086', hint: 'Dans Settings à côté de anonymous dans après vous être connecté.' %>
 
@@ -24,22 +24,29 @@
     </div>
   </div>
 
-  <h2 class='text-center my-4'>Le Classement</h2>
 
-  <div class="row">
-    <div class="col-md-6 col-12">
-      <h3 class='text-center mb-4'>Classement individuel</h3>
-
-      <p>LeGrinch - 100000 pts </p>
-      <p>Michel - 3000 pts </p>
-      <p>Carlito - 3 pts </p>
+  <ul class="nav nav-tabs my-5" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><h4 class='text-center mb-4'>Classement par batch</h4></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false"><h4 class='text-center mb-4'>Classement individuel</h4></a>
+    </li>
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+      <h4 class='text-center mb-4'>Classement par batch</h4>
+      <% Batch.all.each do |batch| %>
+        <% if batch.batch_results.any? %>
+          <p><%= batch.name %> - <%= batch.batch_results.map(&:score).sum %> pts </p>
+        <% end %>
+      <% end %>
     </div>
-    <div class="col-md-6 col-12">
-      <h3 class='text-center mb-4'>Classement par batch</h3>
-
-      <p>Batch-484 - 100000 pts </p>
-      <p>Batch-213 - 3000 pts </p>
-      <p>Batch-246 - 3 pts </p>
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+    <h4 class='text-center mb-4'>Classement individuel</h4>
+      <% User.all.each do |user| %>
+        <p><%= user.pseudo %> - <%= user.results.map(&:score).sum %> pts </p>
+      <% end %>
     </div>
   </div>
 </div>

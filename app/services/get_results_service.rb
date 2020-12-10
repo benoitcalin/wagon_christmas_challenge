@@ -15,6 +15,81 @@ module GetResultsService
 
       @json = JSON.parse(response.body)
 
+      # Pour faire des tests
+      # @json = {"members"=>{"1237086"=>{"global_score"=>0, "stars"=>4, "name"=>"Pilou69", "id"=>"1237086", "last_star_ts"=>"1607448083", "local_score"=>4, "completion_day_level"=>{"2"=>{"2"=>{"get_star_ts"=>"1607448083"}, "1"=>{"get_star_ts"=>"1607447326"}}, "1"=>{"2"=>{"get_star_ts"=>"1607445635"}, "1"=>{"get_star_ts"=>"1607445373"}}}}, "1222761"=>{"stars"=>4, "global_score"=>0, "id"=>"1222761", "name"=>"Pierre-Loïc", "last_star_ts"=>"1607590765", "local_score"=>8, "completion_day_level"=>{"10"=>{"1"=>{"get_star_ts"=>"1607585877"}, "2"=>{"get_star_ts"=>"1607590765"}}, "9"=>{"2"=>{"get_star_ts"=>"1607502335"}, "1"=>{"get_star_ts"=>"1607500726"}}}}}, "owner_id"=>"1237086", "event"=>"2020"}
+
+      # @json = {"members"=>
+      #           {
+      #           "1237086"=>
+      #             {"global_score"=>0,
+      #             "stars"=>4,
+      #             "name"=>"Pilou69",
+      #             "id"=>"1237086",
+      #             "last_star_ts"=>"1607448083",
+      #             "local_score"=>4,
+      #             "completion_day_level"=>
+      #               {"2"=>
+      #                 {"2"=>{"get_star_ts"=>"1607448083"},
+      #                 "1"=>{"get_star_ts"=>"1607447326"}},
+      #               "1"=>
+      #                 {"2"=>{"get_star_ts"=>"1607445635"},
+      #                 "1"=>{"get_star_ts"=>"1607445373"}}}},
+      #           "1222761"=>
+      #             {"stars"=>4,
+      #             "global_score"=>0,
+      #             "id"=>"1222761",
+      #             "name"=>"Pierre-Loïc",
+      #             "last_star_ts"=>"1607590765",
+      #             "local_score"=>8,
+      #             "completion_day_level"=>
+      #               {
+      #                 "10"=>
+      #                   {"1"=>{"get_star_ts"=>"1607585877"},
+      #                   "2"=>{"get_star_ts"=>"1607590765"}},
+      #                 "9"=>
+      #                   {
+      #                     "2"=>{"get_star_ts"=>"1607502335"},
+      #                     "1"=>{"get_star_ts"=>"1607500726"}
+      #                   },
+      #                 "2"=>
+      #                   {"2"=>{"get_star_ts"=>"1607448085"},
+      #                   "1"=>{"get_star_ts"=>"1607447312"}},
+      #                 "1"=>
+      #                   {"2"=>{"get_star_ts"=>"1607445685"},
+      #                   "1"=>{"get_star_ts"=>"1607445312"}}
+      #               }
+      #             },
+      #             "1000000"=>
+      #             {"stars"=>4,
+      #             "global_score"=>0,
+      #             "id"=>"1000000",
+      #             "name"=>"Chatte",
+      #             "last_star_ts"=>"1607590765",
+      #             "local_score"=>8,
+      #             "completion_day_level"=>
+      #               {
+      #                 "10"=>
+      #                   {"1"=>{"get_star_ts"=>"1607585870"},
+      #                   "2"=>{"get_star_ts"=>"1607590760"}},
+      #                 "9"=>
+      #                   {
+      #                     "2"=>{"get_star_ts"=>"1607502330"},
+      #                     "1"=>{"get_star_ts"=>"1607500720"}
+      #                   },
+      #                 "2"=>
+      #                   {"2"=>{"get_star_ts"=>"1607448080"},
+      #                   "1"=>{"get_star_ts"=>"1607447310"}},
+      #                 "1"=>
+      #                   {"2"=>{"get_star_ts"=>"1607445680"},
+      #                   "1"=>{"get_star_ts"=>"1607445310"}}
+      #               }
+      #             }
+      #               },
+      #         "owner_id"=>"1237086",
+      #         "event"=>"2020"}
+
+      Result.destroy_all
+      BatchResult.destroy_all
       get_results_array
     end
 
@@ -22,9 +97,9 @@ module GetResultsService
 
     def get_results_array
       create_members_array
-      create_results_by_challenge(1)
-      fill_results_by_challenge
-      get_scores_by_member
+      create_results
+      calculate_users_scores
+      calculate_batches_scores
     end
 
     def create_members_array
@@ -32,36 +107,46 @@ module GetResultsService
       @json['members'].each { |_key, value| @members_array << value }
     end
 
-    def create_results_by_challenge(start_day)
-      @results_by_challenge = {}
-      for i in (start_day..25) do
-        @results_by_challenge["#{i}-1"] = []
-        @results_by_challenge["#{i}-2"] = []
-      end
-    end
-
-    def fill_results_by_challenge
+    def create_results
       @members_array.each do |member|
+        user = User.find_by_challenger_id(member['id'])
         member['completion_day_level'].each do |day, challenges|
-          @results_by_challenge[day + "-1"] << { member['id'] => challenges["1"]["get_star_ts"] } if challenges["1"]
-          @results_by_challenge[day + "-2"] << { member['id'] => challenges["2"]["get_star_ts"] } if challenges["2"]
-        end
-      end
-    end
-
-    def get_scores_by_member
-      scores = {}
-      @results_by_challenge.each do |_challenge_nbr, participants|
-        p_length = User.count
-        participants.sort_by { |participant| participant['value'] }.each_with_index do |part, index|
-          if scores[part.keys.first]
-            scores[part.keys.first] += p_length - index
-          else
-            scores[part.keys.first] = p_length - index
+          challenges.each do |number, challenge_result|
+            challenge = Challenge.where('day = ? AND number = ?', day, number).first
+            Result.create!(user: user, challenge: challenge, end_time: challenge_result["get_star_ts"]) if challenge
           end
         end
       end
-      scores
+    end
+
+    def calculate_users_scores
+      Challenge.all.each do |challenge|
+        unless challenge.results.empty?
+          challenge.results.order(end_time: 'DESC').each_with_index do |result, index|
+            count = User.count
+            result.update(score: count - index)
+          end
+        end
+      end
+    end
+
+    def calculate_batches_scores
+      Challenge.all.each do |challenge|
+        Batch.all.each do |batch|
+          best_result = batch.results.where(challenge: challenge).order(end_time: 'DESC').first
+          if best_result
+            best_end_time = best_result.end_time
+            BatchResult.create!(batch: batch, challenge: challenge, best_end_time: best_end_time)
+          end
+        end
+
+        unless challenge.batch_results.empty?
+          challenge.batch_results.order(best_end_time: 'DESC').each_with_index do |batch_result, index|
+            count = Batch.count
+            batch_result.update(score: count - index)
+          end
+        end
+      end
     end
   end
 end

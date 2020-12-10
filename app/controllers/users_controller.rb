@@ -14,6 +14,7 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
+    @user.batch = Batch.find(params[:user][:batch])
     if @user.save
       redirect_to root_path, notice: "Votre participation est bien prise en compte"
     else
@@ -24,6 +25,6 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:batch, :pseudo, :challenger_id)
+    params.require(:user).permit(:pseudo, :challenger_id)
   end
 end
