@@ -1,0 +1,2 @@
+class BatchScore < ApplicationRecord
+end

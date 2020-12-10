@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_10_104916) do
+ActiveRecord::Schema.define(version: 2020_12_10_220259) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,63 @@ ActiveRecord::Schema.define(version: 2020_12_10_104916) do
     t.index ["challenge_id"], name: "index_batch_results_on_challenge_id"
   end
 
+  create_table "batch_scores", force: :cascade do |t|
+    t.string "batch", null: false
+    t.integer "score_1", default: 0, null: false
+    t.integer "bonus_1", default: 0, null: false
+    t.integer "score_2", default: 0, null: false
+    t.integer "bonus_2", default: 0, null: false
+    t.integer "score_3", default: 0, null: false
+    t.integer "bonus_3", default: 0, null: false
+    t.integer "score_4", default: 0, null: false
+    t.integer "bonus_4", default: 0, null: false
+    t.integer "score_5", default: 0, null: false
+    t.integer "bonus_5", default: 0, null: false
+    t.integer "score_6", default: 0, null: false
+    t.integer "bonus_6", default: 0, null: false
+    t.integer "score_7", default: 0, null: false
+    t.integer "bonus_7", default: 0, null: false
+    t.integer "score_8", default: 0, null: false
+    t.integer "bonus_8", default: 0, null: false
+    t.integer "score_9", default: 0, null: false
+    t.integer "bonus_9", default: 0, null: false
+    t.integer "score_10", default: 0, null: false
+    t.integer "bonus_10", default: 0, null: false
+    t.integer "score_11", default: 0, null: false
+    t.integer "bonus_11", default: 0, null: false
+    t.integer "score_12", default: 0, null: false
+    t.integer "bonus_12", default: 0, null: false
+    t.integer "score_13", default: 0, null: false
+    t.integer "bonus_13", default: 0, null: false
+    t.integer "score_14", default: 0, null: false
+    t.integer "bonus_14", default: 0, null: false
+    t.integer "score_15", default: 0, null: false
+    t.integer "bonus_15", default: 0, null: false
+    t.integer "score_16", default: 0, null: false
+    t.integer "bonus_16", default: 0, null: false
+    t.integer "score_17", default: 0, null: false
+    t.integer "bonus_17", default: 0, null: false
+    t.integer "score_18", default: 0, null: false
+    t.integer "bonus_18", default: 0, null: false
+    t.integer "score_19", default: 0, null: false
+    t.integer "bonus_19", default: 0, null: false
+    t.integer "score_20", default: 0, null: false
+    t.integer "bonus_20", default: 0, null: false
+    t.integer "score_21", default: 0, null: false
+    t.integer "bonus_21", default: 0, null: false
+    t.integer "score_22", default: 0, null: false
+    t.integer "bonus_22", default: 0, null: false
+    t.integer "score_23", default: 0, null: false
+    t.integer "bonus_23", default: 0, null: false
+    t.integer "score_24", default: 0, null: false
+    t.integer "bonus_24", default: 0, null: false
+    t.integer "score_25", default: 0, null: false
+    t.integer "bonus_25", default: 0, null: false
+    t.integer "score_total", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "batches", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -35,6 +92,39 @@ ActiveRecord::Schema.define(version: 2020_12_10_104916) do
   create_table "challenges", force: :cascade do |t|
     t.string "day", null: false
     t.string "number", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "individual_scores", force: :cascade do |t|
+    t.string "username", null: false
+    t.string "batch", null: false
+    t.integer "score_1", default: 0, null: false
+    t.integer "score_2", default: 0, null: false
+    t.integer "score_3", default: 0, null: false
+    t.integer "score_4", default: 0, null: false
+    t.integer "score_5", default: 0, null: false
+    t.integer "score_6", default: 0, null: false
+    t.integer "score_7", default: 0, null: false
+    t.integer "score_8", default: 0, null: false
+    t.integer "score_9", default: 0, null: false
+    t.integer "score_10", default: 0, null: false
+    t.integer "score_11", default: 0, null: false
+    t.integer "score_12", default: 0, null: false
+    t.integer "score_13", default: 0, null: false
+    t.integer "score_14", default: 0, null: false
+    t.integer "score_15", default: 0, null: false
+    t.integer "score_16", default: 0, null: false
+    t.integer "score_17", default: 0, null: false
+    t.integer "score_18", default: 0, null: false
+    t.integer "score_19", default: 0, null: false
+    t.integer "score_20", default: 0, null: false
+    t.integer "score_21", default: 0, null: false
+    t.integer "score_22", default: 0, null: false
+    t.integer "score_23", default: 0, null: false
+    t.integer "score_24", default: 0, null: false
+    t.integer "score_25", default: 0, null: false
+    t.integer "score_total", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
