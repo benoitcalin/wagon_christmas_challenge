@@ -12,6 +12,14 @@ class UsersController < ApplicationController
     end
   end
 
+  def update
+    scores = GetResultsService.call
+    scores.each do |challenger_id, score|
+        user = User.find_by_challenger_id(challenger_id)
+        user.update(score: score) if user
+    end
+  end
+
   private
 
   def user_params
