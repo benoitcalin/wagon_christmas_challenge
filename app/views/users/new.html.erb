@@ -8,12 +8,14 @@
     <h2 class="mb-4">Inscrivez-vous !</h2>
     <div class="dropdown text-center">
       <button class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-        Formulaire d'inscription
+        Formulaire d'inscription <i class="fas fa-chevron-down"></i>
       </button>
       <div class="collapse mt-4 text-center <%= 'show' if @user.errors.any? %> " id="collapseExample">
         <%= simple_form_for @user do |f| %>
           <%= f.input :pseudo, label: 'Choisissez un pseudo', placeholder: 'BébèreDu33' %>
-          <%= f.input :batch, label: 'Indiquez votre batch', placeholder: '484' %>
+          <%= f.input :batch,
+            collection: ['Batch-16', 'Batch-19', 'Batch-31', 'Batch-40', 'Batch-51', 'Batch-67', 'Batch-85', 'Batch-102', 'Batch-127', 'Batch-140', 'Batch-166', 'Batch-191', 'Batch-213', 'Batch-246', 'Batch-276', 'Batch-325', 'Batch-343', 'Batch-411', 'Batch-435', 'Batch-478', 'Batch-484', 'Batch-516', 'Batch-pirate'],
+            label: 'Indiquez votre batch' %>
           <%= f.input :challenger_id, label: 'Indiquez votre Advent ID', placeholder: '1237086', hint: 'Dans Settings à côté de anonymous dans après vous être connecté.' %>
 
           <%= f.button :submit, class: 'btn btn-primary' %>
