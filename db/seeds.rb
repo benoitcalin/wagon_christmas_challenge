@@ -1,4 +1,7 @@
 puts "Destroy everything"
+BatchResult.destroy_all
+Result.destroy_all
+User.destroy_all
 Batch.destroy_all
 Challenge.destroy_all
 puts "Batches and Challenges destoyed"
@@ -13,8 +16,9 @@ end
 puts "Batches created"
 
 puts "Create Pilou"
-User.create!(pseudo: "Pilou-1", batch: Batch.first, challenger_id: '1237086')
-User.create!(pseudo: "Pilou-2", batch: Batch.last, challenger_id: '1222761')
+User.create!(pseudo: "Pilou-1", batch: Batch.find_by_name('Batch-343'), challenger_id: '1237086')
+User.create!(pseudo: "Pilou-2", batch: Batch.find_by_name('Batch-343'), challenger_id: '1222761')
+User.create!(pseudo: "ElGrincho", batch: Batch.find_by_name('Batch-213'), challenger_id: '1095582')
 puts "Pilou created"
 
 puts "Create Challenges"

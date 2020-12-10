@@ -4,64 +4,92 @@ require "net/http"
 module GetResultsService
   class << self
     def call
-      # url = URI(ENV["CHALLENGE_URL"])
+      url = URI(ENV["CHALLENGE_URL"])
 
-      # https = Net::HTTP.new(url.host, url.port);
-      # https.use_ssl = true
+      https = Net::HTTP.new(url.host, url.port);
+      https.use_ssl = true
 
-      # request = Net::HTTP::Get.new(url)
-      # request["Cookie"] = "session=#{ENV['COOKIE_SESSION']}"
-      # response = https.request(request)
+      request = Net::HTTP::Get.new(url)
+      request["Cookie"] = "session=#{ENV['COOKIE_SESSION']}"
+      response = https.request(request)
 
-      # @json = JSON.parse(response.body)
+      @json = JSON.parse(response.body)
 
+      # Pour faire des tests
       # @json = {"members"=>{"1237086"=>{"global_score"=>0, "stars"=>4, "name"=>"Pilou69", "id"=>"1237086", "last_star_ts"=>"1607448083", "local_score"=>4, "completion_day_level"=>{"2"=>{"2"=>{"get_star_ts"=>"1607448083"}, "1"=>{"get_star_ts"=>"1607447326"}}, "1"=>{"2"=>{"get_star_ts"=>"1607445635"}, "1"=>{"get_star_ts"=>"1607445373"}}}}, "1222761"=>{"stars"=>4, "global_score"=>0, "id"=>"1222761", "name"=>"Pierre-Loïc", "last_star_ts"=>"1607590765", "local_score"=>8, "completion_day_level"=>{"10"=>{"1"=>{"get_star_ts"=>"1607585877"}, "2"=>{"get_star_ts"=>"1607590765"}}, "9"=>{"2"=>{"get_star_ts"=>"1607502335"}, "1"=>{"get_star_ts"=>"1607500726"}}}}}, "owner_id"=>"1237086", "event"=>"2020"}
 
-      @json = {"members"=>
-                {"1237086"=>
-                  {"global_score"=>0,
-                  "stars"=>4,
-                  "name"=>"Pilou69",
-                  "id"=>"1237086",
-                  "last_star_ts"=>"1607448083",
-                  "local_score"=>4,
-                  "completion_day_level"=>
-                    {"2"=>
-                      {"2"=>{"get_star_ts"=>"1607448083"},
-                      "1"=>{"get_star_ts"=>"1607447326"}},
-                    "1"=>
-                      {"2"=>{"get_star_ts"=>"1607445635"},
-                      "1"=>{"get_star_ts"=>"1607445373"}}}},
-                "1222761"=>
-                  {"stars"=>4,
-                  "global_score"=>0,
-                  "id"=>"1222761",
-                  "name"=>"Pierre-Loïc",
-                  "last_star_ts"=>"1607590765",
-                  "local_score"=>8,
-                  "completion_day_level"=>
-                    {
-                      "10"=>
-                        {"1"=>{"get_star_ts"=>"1607585877"},
-                        "2"=>{"get_star_ts"=>"1607590765"}},
-                      "9"=>
-                        {
-                          "2"=>{"get_star_ts"=>"1607502335"},
-                          "1"=>{"get_star_ts"=>"1607500726"}
-                        },
-                      "2"=>
-                        {"2"=>{"get_star_ts"=>"1607448085"},
-                        "1"=>{"get_star_ts"=>"1607447312"}},
-                      "1"=>
-                        {"2"=>{"get_star_ts"=>"1607445685"},
-                        "1"=>{"get_star_ts"=>"1607445312"}}
-                    }
-                  }
-                    },
-              "owner_id"=>"1237086",
-              "event"=>"2020"}
+      # @json = {"members"=>
+      #           {
+      #           "1237086"=>
+      #             {"global_score"=>0,
+      #             "stars"=>4,
+      #             "name"=>"Pilou69",
+      #             "id"=>"1237086",
+      #             "last_star_ts"=>"1607448083",
+      #             "local_score"=>4,
+      #             "completion_day_level"=>
+      #               {"2"=>
+      #                 {"2"=>{"get_star_ts"=>"1607448083"},
+      #                 "1"=>{"get_star_ts"=>"1607447326"}},
+      #               "1"=>
+      #                 {"2"=>{"get_star_ts"=>"1607445635"},
+      #                 "1"=>{"get_star_ts"=>"1607445373"}}}},
+      #           "1222761"=>
+      #             {"stars"=>4,
+      #             "global_score"=>0,
+      #             "id"=>"1222761",
+      #             "name"=>"Pierre-Loïc",
+      #             "last_star_ts"=>"1607590765",
+      #             "local_score"=>8,
+      #             "completion_day_level"=>
+      #               {
+      #                 "10"=>
+      #                   {"1"=>{"get_star_ts"=>"1607585877"},
+      #                   "2"=>{"get_star_ts"=>"1607590765"}},
+      #                 "9"=>
+      #                   {
+      #                     "2"=>{"get_star_ts"=>"1607502335"},
+      #                     "1"=>{"get_star_ts"=>"1607500726"}
+      #                   },
+      #                 "2"=>
+      #                   {"2"=>{"get_star_ts"=>"1607448085"},
+      #                   "1"=>{"get_star_ts"=>"1607447312"}},
+      #                 "1"=>
+      #                   {"2"=>{"get_star_ts"=>"1607445685"},
+      #                   "1"=>{"get_star_ts"=>"1607445312"}}
+      #               }
+      #             },
+      #             "1000000"=>
+      #             {"stars"=>4,
+      #             "global_score"=>0,
+      #             "id"=>"1000000",
+      #             "name"=>"Chatte",
+      #             "last_star_ts"=>"1607590765",
+      #             "local_score"=>8,
+      #             "completion_day_level"=>
+      #               {
+      #                 "10"=>
+      #                   {"1"=>{"get_star_ts"=>"1607585870"},
+      #                   "2"=>{"get_star_ts"=>"1607590760"}},
+      #                 "9"=>
+      #                   {
+      #                     "2"=>{"get_star_ts"=>"1607502330"},
+      #                     "1"=>{"get_star_ts"=>"1607500720"}
+      #                   },
+      #                 "2"=>
+      #                   {"2"=>{"get_star_ts"=>"1607448080"},
+      #                   "1"=>{"get_star_ts"=>"1607447310"}},
+      #                 "1"=>
+      #                   {"2"=>{"get_star_ts"=>"1607445680"},
+      #                   "1"=>{"get_star_ts"=>"1607445310"}}
+      #               }
+      #             }
+      #               },
+      #         "owner_id"=>"1237086",
+      #         "event"=>"2020"}
 
       Result.destroy_all
+      BatchResult.destroy_all
       get_results_array
     end
 
@@ -71,7 +99,7 @@ module GetResultsService
       create_members_array
       create_results
       calculate_users_scores
-      # calculate_batches_scores
+      calculate_batches_scores
     end
 
     def create_members_array
@@ -102,6 +130,23 @@ module GetResultsService
       end
     end
 
+    def calculate_batches_scores
+      Challenge.all.each do |challenge|
+        Batch.all.each do |batch|
+          best_result = batch.results.where(challenge: challenge).order(end_time: 'DESC').first
+          if best_result
+            best_end_time = best_result.end_time
+            BatchResult.create!(batch: batch, challenge: challenge, best_end_time: best_end_time)
+          end
+        end
 
+        unless challenge.batch_results.empty?
+          challenge.batch_results.order(best_end_time: 'DESC').each_with_index do |batch_result, index|
+            count = Batch.count
+            batch_result.update(score: count - index)
+          end
+        end
+      end
+    end
   end
 end
