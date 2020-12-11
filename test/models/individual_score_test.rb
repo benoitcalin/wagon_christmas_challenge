@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ChallengeTest < ActiveSupport::TestCase
+class IndividualScoreTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

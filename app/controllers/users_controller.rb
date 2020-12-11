@@ -1,13 +1,5 @@
 class UsersController < ApplicationController
 
-  def self.update_score
-    scores = GetResultsService.call
-    scores.each do |challenger_id, score|
-      user = User.find_by_challenger_id(challenger_id)
-      user.update(score: score) if user
-    end
-  end
-
   def new
     @user = User.new
   end

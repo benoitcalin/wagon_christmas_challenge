@@ -36,16 +36,14 @@
   <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
       <h4 class='text-center mb-4'>Classement par batch</h4>
-      <% Batch.all.each do |batch| %>
-        <% if batch.batch_results.any? %>
-          <p><%= batch.name %> - <%= batch.batch_results.map(&:score).sum %> pts </p>
-        <% end %>
+      <% BatchScore.all.sort_by(&:score_total).reverse.each do |score| %>
+        <p>#<%= score.batch %> - <%= score.score_total %>pts </p>
       <% end %>
     </div>
     <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
     <h4 class='text-center mb-4'>Classement individuel</h4>
-      <% User.all.each do |user| %>
-        <p><%= user.pseudo %> - <%= user.results.map(&:score).sum %> pts </p>
+      <% IndividualScore.all.sort_by(&:score_total).reverse.each do |score| %>
+        <p><%= score.username %> - <%= score.score_total %> pts </p>
       <% end %>
     </div>
   </div>
