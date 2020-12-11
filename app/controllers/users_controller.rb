@@ -8,7 +8,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     @user.batch = Batch.find(params[:user][:batch]) if params[:user][:batch] != ""
     if @user.save
-      redirect_to root_path, notice: "Votre participation est bien prise en compte"
+      redirect_to root_path, notice: "Ta participation a bien été prise en compte 👍"
     else
       render :new
     end
