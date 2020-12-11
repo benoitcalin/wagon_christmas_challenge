@@ -2,6 +2,8 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
+    begin_date = (ENV["BEGIN_DATE"] || 11).to_i
+    @day_range = (begin_date..25)
   end
 
   def create
