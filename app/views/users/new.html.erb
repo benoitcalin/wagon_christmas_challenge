@@ -3,7 +3,6 @@
   <h1 class="text-center my-3">BICODE 2020</h1>
 
   <div class="d-flex flex-column align-items-center">
-    <%# <h2 class="mb-4"></h2> %>
     <div class="dropdown text-center">
       <button class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
         Inscris-toi ici <i class="fas fa-chevron-down"></i>
@@ -24,24 +23,75 @@
 
   <ul class="nav nav-tabs my-5" id="myTab" role="tablist">
     <li class="nav-item">
-      <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><h4 class='text-center mb-4'>Classement par batch</h4></a>
+      <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><h3 class='text-center mb-4'>Classement par batch</h3></a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false"><h4 class='text-center mb-4'>Classement individuel</h4></a>
+      <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false"><h3 class='text-center mb-4'>Classement individuel</h3></a>
     </li>
   </ul>
+
   <div class="tab-content" id="myTabContent">
+    <p>(⚠️ les scores ne sont comptabilisés qu'à partir du 11 décembre)</p>
+
     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
       <h4 class='text-center mb-4'>Classement par batch</h4>
-      <% BatchScore.all.sort_by(&:score_total).reverse.each do |score| %>
-        <p>#<%= score.batch %> - <%= score.score_total %>pts </p>
-      <% end %>
+      <div class="table-responsive">
+        <table class="table table-hover text-nowrap text-center">
+          <thead>
+            <tr class="">
+              <th scope="col">Rang</th>
+              <th scope="col">Batch #</th>
+              <th scope="col">Score</th>
+              <% @day_range.each do |day| %>
+                <th scope="col"><%= day %> déc.</th>
+              <% end %>
+            </tr>
+          </thead>
+          <tbody>
+            <% BatchScore.order("#{@day_range.map { |d| "score_#{d} + bonus_#{d}" }.join(' + ')} DESC").each_with_index do |batch, idx| %>
+            <tr class=<%= if idx == 0 then "table-success"; elsif idx == 1 then "table-warning" elsif idx == 2 then "table-primary" end %> >
+              <th scope="row"><%= idx+1 %></th>
+              <td>#<%= batch.batch %></td>
+              <td><%= @day_range.map { |d| batch["score_#{d}"] + batch["bonus_#{d}"] }.sum %></td>
+              <% @day_range.each do |day| %>
+                <td><%= batch["score_#{day}"] %><%= " (+#{batch["bonus_#{day}"]})" if batch["bonus_#{day}"] != 0 %></td>
+              <% end %>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     </div>
+
     <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-    <h4 class='text-center mb-4'>Classement individuel</h4>
-      <% IndividualScore.all.sort_by(&:score_total).reverse.each do |score| %>
-        <p><%= score.username %> - <%= score.score_total %> pts </p>
-      <% end %>
+      <h4 class='text-center mb-4'>Classement individuel</h4>
+      <div class="table-responsive">
+        <table class="table table-hover text-nowrap text-center">
+          <thead>
+            <tr>
+              <th scope="col">Rang</th>
+              <th scope="col">Pseudo</th>
+              <th scope="col">Score</th>
+              <% @day_range.each do |day| %>
+                <th scope="col"><%= day %> déc.</th>
+              <% end %>
+            </tr>
+          </thead>
+          <tbody>
+            <% IndividualScore.order("#{@day_range.map { |d| "score_#{d}" }.join(' + ')} DESC").each_with_index do |individual, idx| %>
+            <tr class=<%= if idx == 0 then "table-success"; elsif idx == 1 then "table-warning" elsif idx == 2 then "table-primary" end %> >
+              <th scope="row"><%= idx+1 %></th>
+              <td><%= individual.username %> (#<%= individual.batch %>)</td>
+              <td><%= @day_range.map { |d| individual["score_#{d}"] }.sum %></td>
+              <% @day_range.each do |day| %>
+                <td><%= individual["score_#{day}"] %></td>
+              <% end %>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     </div>
+
   </div>
 </div>
