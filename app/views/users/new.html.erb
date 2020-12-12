@@ -28,12 +28,12 @@
     <li class="nav-item">
       <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false"><h3 class='text-center mb-4'>Classement individuel</h3></a>
     </li>
+    <li class="nav-item">
+      <a class="nav-link" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="false"><h3 class='text-center mb-4'>Informations</h3></a>
+    </li>
   </ul>
 
   <div class="tab-content" id="myTabContent">
-    <p>⚠️ Les scores ne sont comptabilisés qu'à partir du 11 décembre.
-      <%= link_to 'Tous les détails du concours sur Slack', 'https://lewagon-alumni.slack.com/archives/C0RGB2CU9/p1607610602119100' %>
-    </p>
 
     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
       <h4 class='text-center mb-4'>Classement par batch</h4>
@@ -50,11 +50,11 @@
             </tr>
           </thead>
           <tbody>
-            <% BatchScore.order("#{@day_range.map { |d| "score_#{d} + bonus_#{d}" }.join(' + ')} DESC").each_with_index do |batch, idx| %>
+            <% BatchScore.order("score_total DESC").each_with_index do |batch, idx| %>
             <tr class=<%= if idx == 0 then "table-success"; elsif idx == 1 then "table-warning" elsif idx == 2 then "table-primary" end %> >
               <th scope="row"><%= idx+1 %></th>
               <td>#<%= batch.batch %></td>
-              <td><%= @day_range.map { |d| batch["score_#{d}"] + batch["bonus_#{d}"] }.sum %></td>
+              <td><%= batch.score_total %></td>
               <% @day_range.each do |day| %>
                 <td><%= batch["score_#{day}"] %><%= " (+#{batch["bonus_#{day}"]})" if batch["bonus_#{day}"] != 0 %></td>
               <% end %>
@@ -63,6 +63,7 @@
           </tbody>
         </table>
       </div>
+      <p class="text-center my-3">Si tu penses qu'une erreur s'est glissée sur le classement, <%= link_to('contacte-moi sur Slack', 'slack://user?team=T02NE0241&id=URZ0F4TEF') %></p>
     </div>
 
     <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
@@ -80,11 +81,11 @@
             </tr>
           </thead>
           <tbody>
-            <% IndividualScore.order("#{@day_range.map { |d| "score_#{d}" }.join(' + ')} DESC").each_with_index do |individual, idx| %>
+            <% IndividualScore.order("score_total DESC").each_with_index do |individual, idx| %>
             <tr class=<%= if idx == 0 then "table-success"; elsif idx == 1 then "table-warning" elsif idx == 2 then "table-primary" end %> >
               <th scope="row"><%= idx+1 %></th>
               <td><%= individual.username %> (#<%= individual.batch %>)</td>
-              <td><%= @day_range.map { |d| individual["score_#{d}"] }.sum %></td>
+              <td><%= individual.score_total %></td>
               <% @day_range.each do |day| %>
                 <td><%= individual["score_#{day}"] %></td>
               <% end %>
@@ -93,9 +94,51 @@
           </tbody>
         </table>
       </div>
+      <p class="text-center my-3">Si tu penses qu'une erreur s'est glissée sur le classement ou que ton pseudo ne s'affiche pas, <%= link_to('contacte-moi sur Slack', 'slack://user?team=T02NE0241&id=URZ0F4TEF') %></p>
     </div>
 
-    <p class="text-center my-3">Si tu penses qu'une erreur s'est glissée sur le classement, <%= link_to('contacte-moi sur Slack', 'slack://user?team=T02NE0241&id=URZ0F4TEF') %></p>
+    <div class="tab-pane fade mb-5" id="info" role="tabpanel" aria-labelledby="info-tab">
+      <p>Bienvenue dans le <strong>BICODE 2020</strong>, le concours de code entre toutes les promotions du Wagon Bordeaux ⚔️</p>
+      <p>ℹ️ Les étapes pour s'inscrire au concours sont toutes détaillées
+        <%= link_to 'dans ce message Slack', 'https://lewagon-alumni.slack.com/archives/C0RGB2CU9/p1607610602119100' %>.
+      </p>
+
+      <h4>Je suis inscrit, et maintenant ?</h4>
+
+      <p>Chaque jour, un nouveau challenge apparaît à 6h00 du matin sur <%= link_to "la page d’accueil d'Advent Of Code", 'https://adventofcode.com/' %>.</p>
+      <p>Toutes les instructions concernant le challenge se trouvent sur la page correspondant au jour donné. <%= link_to 'Exemple pour la journée du 1er décembre', 'https://adventofcode.com/2020/day/1' %>.
+      Il y a en général un fichier brut, l’<code>input</code>. C’est en suivant les instructions et en manipulant cet <code>input</code> (avec le langage de ton choix)
+      que tu trouveras la réponse. Compte 15-20 minutes par jour en moyenne ⏲️</p>
+      <p><strong>A noter que chaque challenge est en 2 parties, donc 2 réponses sont à trouver par jour !</strong></p>
+      <p>Ta mission : trouver les réponses aux challenges le plus rapidement possible 💪</p>
+      <p>ℹ️ Tous les challenges te rapportent des points, tu peux les faire dans l'ordre que tu veux mais les plus récents rapportent plus...</p>
+
+      <h4>Les points, les classements... Comment ça marche ? 🏆</h4>
+
+      <h5>Classement individuel</h5>
+      <p>Le site <%= link_to 'https://www.bicode.camp/' %> récupère automatiquement les scores depuis Advent Of Code.</p>
+      <p><strong>Pour tous les challenges entre le 1er et le 10 décembre</strong>, chaque challenge réussi te rapporte <code>N/2</code> points,
+      <code>N</code> correspondant au nombre de participants. Supposons que nous soyons <code>10</code> participants,
+      chaque énigme rapporte donc <code>5</code> points et, comme il y a 2 énigmes par jour, chaque jour peut rapporter <code>10</code> points.</p>
+      <p><strong>Pour les challenges à partir du 11 décembre</strong> (date de l'annonce officielle du BICODE), c'est là qu'il faut être vif.
+      Le premier participant à trouver la bonne réponse d'une énigme remporte <code>N</code> points, le second remporte <code>N-1</code> points, le troisième <code>N-2</code> points et ainsi de suite.
+      Par exemple, si nous sommes 25 participants, le premier qui résout <%= link_to "l'énigme d'aujourd'hui", "https://adventofcode.com/2020/day/#{Date.today.mday}" %> gagnera 25 points, le deuxième 24 points etc.</p>
+      <p>Dans tous les cas, si le nombre de participants <code>N</code> change au cours du temps, tous les scores sont ajustés dynamiquement.
+      Cela a deux conséquences majeures :
+      <ul>
+        <li>Même si tu résous une énigme 3 jours après sa sortie, tu remportes des points 💰</li>
+        <li>Que ce soit aujourd'hui ou 3 jours avant la fin, motive tes camarades de batch pour s’inscrire, car vous pouvez encore remporter plein de points pendant les jours restants et faire gagner votre batch 🥇</li>
+      </ul></p>
+
+      <h5>Classement des batchs (celui qui compte vraiment)</h5>
+
+      <p>Le classement des batchs sera établi de la même manière. Comme il y a 23 batchs (en comptant celui des pirates 🦜), la première personne à trouver la réponse fait remporter <code>23</code> points à son batch.
+      La seconde, <em>si elle n’appartient pas au batch de la première</em>, fait remporter 22 points au sien, et ainsi de suite.</p>
+      <p>Enfin, parce que l’entraide c’est important, si au moins 5 membres de ton batch ont trouvé la réponse d'une énigme, ton batch gagne un bonus de <code>5</code> points.</p>
+      <br><br><br><br><br>
+      <!-- pour ceux qui aiment scroller -->
+
+    </div>
 
   </div>
 </div>
