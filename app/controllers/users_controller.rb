@@ -2,6 +2,7 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
+    @day_range = (1..25)
   end
 
   def create

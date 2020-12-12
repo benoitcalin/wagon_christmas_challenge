@@ -82,17 +82,22 @@ namespace :score do
       }
       score_total = 0
 
-      daily_results.each do |day|
-        challenges = day.values[0]
+      daily_results.each do |daily_result|
+        day = daily_result.keys[0]
+        challenges = daily_result.values[0]
         daily_score = 0
-        
+
         challenges.each do |challenge, players|
           next if players.index(user.challenger_id).nil?
 
-          daily_score += N_PLAYERS - players.index(user.challenger_id)
+          if ("1".."10").include? day
+            daily_score += (N_PLAYERS + 1) / 2
+          elsif ("11".."25").include? day
+            daily_score += N_PLAYERS - players.index(user.challenger_id)
+          end
         end
 
-        user_score["score_#{day.keys[0]}".to_sym] = daily_score
+        user_score["score_#{day}".to_sym] = daily_score
         score_total += daily_score
       end
 
@@ -125,8 +130,9 @@ namespace :score do
       }
       score_total = 0
 
-      daily_results.each do |day|
-        challenges = day.values[0]
+      daily_results.each do |daily_result|
+        day = daily_result.keys[0]
+        challenges = daily_result.values[0]
         daily_score = 0
         daily_bonus = 0
 
@@ -137,12 +143,17 @@ namespace :score do
 
           next if batches.index(batch.short_name).nil?
 
+          if ("1".."10").include? day
+            daily_score += (N_BATCHES + 1) / 2
+          elsif ("11".."25").include? day
+            daily_score += N_BATCHES - batches.uniq.index(batch.short_name)
+          end
+
           daily_bonus += 5 if batches.count(batch.short_name) >= 5
-          daily_score += N_BATCHES - batches.uniq.index(batch.short_name)
         end
 
-        batch_score["score_#{day.keys[0]}".to_sym] = daily_score
-        batch_score["bonus_#{day.keys[0]}".to_sym] = daily_bonus
+        batch_score["score_#{day}".to_sym] = daily_score
+        batch_score["bonus_#{day}".to_sym] = daily_bonus
         score_total += daily_score + daily_bonus
       end
 
